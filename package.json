@@ -8,6 +8,7 @@
     "start": "node index.js"
   },
   "author": "",
+  "repository": "https://github.com/ErnstHaagsman/SkiBuddy-live/",
   "license": "MIT",
   "dependencies": {
     "nodejs-websocket": "^1.4.1"
