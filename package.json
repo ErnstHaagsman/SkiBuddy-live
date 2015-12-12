@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "nodejs-websocket": "^1.4.1"
   }
