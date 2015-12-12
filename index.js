@@ -1,15 +1,27 @@
-var ws = require('nodejs-websocket');
+var WebSocketServer = require('websocket').server;
+var http = require('http');
 
 var events = {};
 
-var server = ws.createServer().listen(8282);
+var httpServer = http.createServer(function(request,response){
+    response.writeHead(404);
+    response.end();
+});
 
-server.on('connection', function(conn){
+httpServer.listen(8585);
+
+var server = new WebSocketServer({
+    httpServer: httpServer,
+    autoAcceptConnections: true
+});
+
+server.on('connect', function(conn){
     var eventID;
 
-    conn.on('text', function(msg){
+    console.log("Connection from " + conn.remoteAddress);
+    conn.on('message', function(msg){
         try {
-            var incoming = JSON.parse(msg);
+            var incoming = JSON.parse(msg.utf8Data);
             eventID = incoming["eventID"];
 
             if(events.hasOwnProperty(eventID)){
@@ -21,7 +33,7 @@ server.on('connection', function(conn){
 
                 connections.forEach(function(elem){
                     if (elem !== conn)
-                        elem.sendText(msg);
+                        elem.sendUTF(msg);
                 });
             } else {
                 // Nobody in this event yet, create new array with
@@ -37,6 +49,7 @@ server.on('connection', function(conn){
 
     conn.on('close', function(){
         // Remove this connection from the event's connection list
+        console.log("Disconnected: " + conn.remoteAddress);
         if(eventID &&
            events.hasOwnProperty(eventID) &&
            events[eventID].indexOf(conn) !== -1)
