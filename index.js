@@ -33,7 +33,7 @@ server.on('connect', function(conn){
 
                 connections.forEach(function(elem){
                     if (elem !== conn)
-                        elem.sendUTF(msg);
+                        elem.sendUTF(msg.utf8Data);
                 });
             } else {
                 // Nobody in this event yet, create new array with
